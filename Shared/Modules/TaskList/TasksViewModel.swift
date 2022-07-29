@@ -22,9 +22,7 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
         self.api = api
     }
     
-    func loadData() {
-        guard tasks.count == 0 else { return }
-        
+    func loadData() {        
         networkRequest(.initial) {
             let result = try await self.api.fetchTasks()
             await MainActor.run { self.tasks = result }

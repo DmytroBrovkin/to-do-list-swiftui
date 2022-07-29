@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		B2B37871289399DD0073527E /* LoginErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37870289399DD0073527E /* LoginErrorHandler.swift */; };
 		B2B378732893B5690073527E /* TasksErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B378722893B5690073527E /* TasksErrorHandler.swift */; };
+		B2B37877289434260073527E /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37876289434260073527E /* AppRouter.swift */; };
+		B2B37879289434A20073527E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37878289434A20073527E /* AppDelegate.swift */; };
 		FE0F826527E4D5C000D341EC /* AuthAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */; };
 		FE0F826C27E4D83700D341EC /* TaskAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */; };
 		FE0F826D27E4D98000D341EC /* TaskAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */; };
@@ -55,6 +57,8 @@
 /* Begin PBXFileReference section */
 		B2B37870289399DD0073527E /* LoginErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrorHandler.swift; sourceTree = "<group>"; };
 		B2B378722893B5690073527E /* TasksErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksErrorHandler.swift; sourceTree = "<group>"; };
+		B2B37876289434260073527E /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		B2B37878289434A20073527E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIMock.swift; sourceTree = "<group>"; };
 		FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAPIMock.swift; sourceTree = "<group>"; };
 		FE40D64427E2EC49005485CC /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -239,11 +243,13 @@
 		FEC2ABD727DBA0DA008FF9B6 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				B2B37876289434260073527E /* AppRouter.swift */,
+				B2B37878289434A20073527E /* AppDelegate.swift */,
+				FEC2ABD827DBA0DA008FF9B6 /* ToDoListApp.swift */,
 				FE53B14027E0F04900C4B82B /* Network */,
 				FE82427927DEE5DF002DF763 /* Models */,
 				FE82427427DEE5CB002DF763 /* Common */,
 				FEC2AC2227DBC420008FF9B6 /* Modules */,
-				FEC2ABD827DBA0DA008FF9B6 /* ToDoListApp.swift */,
 				FE40D64627E2EC87005485CC /* Task.json */,
 				FEC2ABDA27DBA0E2008FF9B6 /* Assets.xcassets */,
 			);
@@ -417,6 +423,7 @@
 				FE53B13927E0E1B200C4B82B /* AppState.swift in Sources */,
 				FE0F826D27E4D98000D341EC /* TaskAPIMock.swift in Sources */,
 				FE53B15027E22EED00C4B82B /* ErrorHandlingViewModifier.swift in Sources */,
+				B2B37879289434A20073527E /* AppDelegate.swift in Sources */,
 				FE53B13C27E0E3DE00C4B82B /* TextFieldViewModifier.swift in Sources */,
 				FE53B13427E0E03D00C4B82B /* User.swift in Sources */,
 				B2B378732893B5690073527E /* TasksErrorHandler.swift in Sources */,
@@ -426,6 +433,7 @@
 				FEC2AC1F27DBACD5008FF9B6 /* TasksViewModel.swift in Sources */,
 				FED0571627E2DB10007743D4 /* NetworkModels.swift in Sources */,
 				FE53B13027E0DF2300C4B82B /* LoginView.swift in Sources */,
+				B2B37877289434260073527E /* AppRouter.swift in Sources */,
 				FE53B15727E24AEA00C4B82B /* Error.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -570,7 +578,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -599,7 +607,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

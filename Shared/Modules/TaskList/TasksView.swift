@@ -7,24 +7,28 @@
 
 import SwiftUI
 
-struct TasksView: View, Equatable {
-    @EnvironmentObject private var appState: AppState
-    
+struct TasksView: View {    
     @ObservedObject private var errorHandler: TasksErrorHandler
     @ObservedObject private var viewModel: TasksViewModel
     
-    init(viewModel: TasksViewModel) {
+    private weak var router: AppRouter?
+    
+    init(viewModel: TasksViewModel, router: AppRouter) {
         self.viewModel = viewModel
         self.errorHandler = TasksErrorHandler(viewModel: viewModel)
+        self.router = router
     }
 
     var body: some View {
         List {
             ForEach(viewModel.sortedTasks, id: \.id) { task in
-                NavigationLink(destination: createTaskDetailsView(task)) {
-                    TaskRow(task: task) { id, state in
-                        viewModel.update(task: id, state: state)
-                    }
+                TaskRow(task: task) { id, state in
+                    viewModel.update(task: id, state: state)
+                }
+                // This is needed to cover entire section with tap gesture
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    router?.showTasksDetailsScreen(task)
                 }
             }.onDelete(perform: viewModel.delete(at:))
         }
@@ -34,25 +38,12 @@ struct TasksView: View, Equatable {
         .onAppear(perform: viewModel.loadData)
         .navigationTitle("To do list")
         .toolbar {
-            NavigationLink(destination: createTaskDetailsView(nil)) {
-                Text("Add")
+            Button("Add") {
+                router?.showTasksDetailsScreen(nil)
             }
         }
         .navigationBarBackButtonHidden(true)
         .errorHandling($errorHandler.currentAlert)
-    }
-    
-    private func createTaskDetailsView(_ task: TaskModel?) -> some View {
-        let targetViewModel = TasksDetailsViewModel(task: task, api: TaskAPI(authKey: appState.networkConfig.token))
-        let targetView = TaskDetailsView(viewModel: targetViewModel) { task in
-            viewModel.updateOrReplace(task)
-        }
-
-        return targetView
-    }
-    
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        return true
     }
 }
 
@@ -63,7 +54,7 @@ struct TasksView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            TasksView(viewModel: TasksViewModel(api: TaskAPIMock()))
+            TasksView(viewModel: TasksViewModel(api: TaskAPIMock()), router: AppRouter())
                 .environmentObject(appState)
                 .previewInterfaceOrientation(.portrait)
         }

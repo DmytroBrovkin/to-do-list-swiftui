@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-@main
-struct ToDoListApp: App {
-    @ObservedObject var appState = AppState()
-
-    var body: some Scene {
-        WindowGroup {
-            LoginView(viewModel: LoginViewModel(api: AuthAPI()))
-                .environmentObject(appState)
-        }
-    }
-}
+//@main
+//struct ToDoListApp: App {
+//    @ObservedObject var appState = AppState()
+//
+//    var body: some Scene {
+//        WindowGroup {
+//            LoginView(viewModel: LoginViewModel(api: AuthAPI()))
+//                .environmentObject(appState)
+//        }
+//    }
+//}

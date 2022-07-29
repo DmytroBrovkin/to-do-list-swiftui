@@ -8,18 +8,15 @@
 import SwiftUI
 
 struct TaskDetailsView: View {
-    @EnvironmentObject private var appState: AppState
-    
     @ObservedObject private var errorHandler: ErrorHandler<TasksDetailsViewModel>
     @ObservedObject private var viewModel: TasksDetailsViewModel
     
-    @Environment(\.dismiss) private var dismiss
-    private var callback: (TaskModel) -> Void
+    private weak var router: AppRouter?
     
-    init(viewModel: TasksDetailsViewModel, callback: @escaping (TaskModel) -> Void) {
+    init(viewModel: TasksDetailsViewModel, router: AppRouter) {
         self.viewModel = viewModel
-        self.callback = callback
         self.errorHandler = ErrorHandler(viewModel: viewModel)
+        self.router = router
     }
     
     var body: some View {
@@ -50,8 +47,7 @@ struct TaskDetailsView: View {
             }
         }
         .onReceive(viewModel.submitCompleted) { _ in
-            callback(viewModel.task)
-            DispatchQueue.main.async { dismiss() }
+            router?.popBack(true)
         }
         .onReceive(viewModel.error) { error in
             errorHandler.handle(error: error)
@@ -60,7 +56,6 @@ struct TaskDetailsView: View {
         .navigationTitle("Add task")
         .errorHandling($errorHandler.currentAlert)
 
-        
         Button("Submit") {
             viewModel.submit()
         }
@@ -75,8 +70,8 @@ struct TaskDetailsView_Previews: PreviewProvider {
     static private let tasks: [TaskModel] = load("Task.json")
 
     static var previews: some View {
-        TaskDetailsView(viewModel: TasksDetailsViewModel(task: tasks[0], api: TaskAPIMock())) { task in }
-            .environmentObject(appState)
+        TaskDetailsView(viewModel: TasksDetailsViewModel(task: tasks[0], api: TaskAPIMock()),
+                        router: AppRouter())
     }
 }
 
