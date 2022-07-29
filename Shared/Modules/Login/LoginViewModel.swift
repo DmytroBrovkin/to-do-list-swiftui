@@ -8,9 +8,14 @@
 import Combine
 import SwiftUI
 
-class LoginViewModel: BaseViewModel<NetworkConfig> {
+class LoginViewModel: BaseViewModel<LoginViewModel.NetworkRequest> {
+    enum NetworkRequest {
+        case signIn, register
+    }
+    
     @Published var credentials: AuthCredentials = AuthCredentials(email: "dimitri@gmail.com", password: "testtest")
-
+    let networkConfig = PassthroughSubject<NetworkConfig, Never>()
+    
     private let api: AuthAPIProtocol
 
     required init(api: AuthAPIProtocol) {
@@ -18,14 +23,17 @@ class LoginViewModel: BaseViewModel<NetworkConfig> {
     }
     
     func singIn() {
-        let publisher = api.signIn(email: credentials.email, password: credentials.password)
-        handle(publisher)
+        networkRequest(.signIn) {
+            let result = try await self.api.signIn(email: self.credentials.email, password: self.credentials.password)
+            await MainActor.run { self.networkConfig.send(result) }
+        }
     }
     
     func register() {
-        let publisher = api.register(email: credentials.email, password: credentials.password)
-        handle(publisher) { [weak self] in
-            self?.singIn()
+        networkRequest(.register) {
+            let _ = try await self.api.register(email: self.credentials.email, password: self.credentials.password)
+            let result = try await self.api.signIn(email: self.credentials.email, password: self.credentials.password)
+            await MainActor.run { self.networkConfig.send(result) }
         }
     }
 }

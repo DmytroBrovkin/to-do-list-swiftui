@@ -9,11 +9,13 @@ import SwiftUI
 
 struct TasksView: View, Equatable {
     @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var errorHandler: ErrorHandler
+    
+    @ObservedObject private var errorHandler: TasksErrorHandler
     @ObservedObject private var viewModel: TasksViewModel
     
     init(viewModel: TasksViewModel) {
         self.viewModel = viewModel
+        self.errorHandler = TasksErrorHandler(viewModel: viewModel)
     }
 
     var body: some View {
@@ -37,9 +39,10 @@ struct TasksView: View, Equatable {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .errorHandling($errorHandler.currentAlert)
     }
     
-    private func createTaskDetailsView(_ task: Task?) -> some View {
+    private func createTaskDetailsView(_ task: TaskModel?) -> some View {
         let targetViewModel = TasksDetailsViewModel(task: task, api: TaskAPI(authKey: appState.networkConfig.token))
         let targetView = TaskDetailsView(viewModel: targetViewModel) { task in
             viewModel.updateOrReplace(task)
@@ -57,14 +60,11 @@ struct TasksView: View, Equatable {
 
 struct TasksView_Previews: PreviewProvider {
     @ObservedObject static private var appState = AppState()
-    @ObservedObject static private var errorHandler = ErrorHandler()
     
     static var previews: some View {
         NavigationView {
             TasksView(viewModel: TasksViewModel(api: TaskAPIMock()))
-                .applyErrorHandling()
                 .environmentObject(appState)
-                .environmentObject(errorHandler)
                 .previewInterfaceOrientation(.portrait)
         }
     }

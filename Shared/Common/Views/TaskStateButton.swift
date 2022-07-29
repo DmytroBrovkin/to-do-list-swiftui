@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-typealias TaskUpdate = (_ id: Int, _ state: Task.State) -> Void
+typealias TaskUpdate = (_ id: Int, _ state: TaskModel.State) -> Void
 
 struct TaskStateButton: View {
-    var task: Task
+    var task: TaskModel
     var callback: TaskUpdate
     
     var body: some View {
@@ -31,7 +31,7 @@ struct TaskStateButton: View {
         }
     }
     
-    var nextState: Task.State {
+    var nextState: TaskModel.State {
         switch task.status {
         case .todo: return .inProgress
         case .inProgress: return .done

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TaskRow: View {
-    var task: Task
+    var task: TaskModel
     var callback: TaskUpdate
 
     var body: some View {
@@ -21,7 +21,6 @@ struct TaskRow: View {
             }
             Text(task.content)
                 .font(.caption)
-            
         }
     }
 }

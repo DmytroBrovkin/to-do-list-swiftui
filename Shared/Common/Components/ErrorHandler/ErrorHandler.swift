@@ -8,36 +8,34 @@
 import Foundation
 import Combine
 
-struct ErrorAlert: Identifiable {
-    var id = UUID()
-    var message: String
+struct ErrorContext: Identifiable {
+    let id = UUID()
+    let title: String
+    let message: String
+    let type: `Type` = .alert
     var dismissAction: (() -> Void)?
+    var retryAction: (() -> Void)?
+    
+    enum `Type` {
+        case alert, errorScreen
+    }
 }
 
-class ErrorHandler: ObservableObject {
-    @Published var currentAlert: ErrorAlert?
-    @Published var isAuthExpired: Bool?
+class ErrorHandler<T: BaseViewModelProtocol>: ObservableObject  {
+    @Published var currentAlert: ErrorContext?
+    var disposables = Set<AnyCancellable>()
+    
+    let viewModel: T
 
-    func handle(error: Error, dismissAction: (() -> Void)? = nil) {
-        currentAlert = ErrorAlert(message: error.localizedDescription, dismissAction: dismissAction)
+    init(viewModel: T) {
+        self.viewModel = viewModel
+        self.viewModel.error
+            .sink(receiveValue: handle(error:))
+            .store(in: &disposables)
     }
     
     func handle(error: NSError) {
-        var description = error.localizedDescription
-        
-        if let dict = error.userInfo as? [String: String], let details = dict["details"] {
-            description = details
-        } else if let dict = error.userInfo as? [String: [String]] {
-            description = dict.map { $0.0 + "=" + $0.1.joined(separator: ", ") }.joined(separator: "\n")
-        }
-                
-        currentAlert = ErrorAlert(message: description) { [weak self] in
-            switch error.code {
-            case 401:
-                self?.isAuthExpired = true
-            default:
-                break
-            }
-        }
+        currentAlert = ErrorContext(title: "Error",
+                                    message: "Something went wrong. Please try again later")
     }
 }

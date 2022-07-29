@@ -8,18 +8,23 @@
 import Foundation
 import Combine
 
-class TasksDetailsViewModel: BaseViewModel<NetworkResponse> {
+class TasksDetailsViewModel: BaseViewModel<TasksDetailsViewModel.NetworkRequest> {
+    enum NetworkRequest {
+        case submit
+    }
+    
     enum Strategy {
         case update, create
     }
     
-    @Published var task: Task
-
+    @Published var task: TaskModel
+    let submitCompleted = PassthroughSubject<Bool, Never>()
+    
     private var subscribers = Set<AnyCancellable>()
     private var strategy: Strategy
     private var api: TaskAPIProtocol
     
-    init(task: Task?, api: TaskAPIProtocol) {
+    init(task: TaskModel?, api: TaskAPIProtocol) {
         self.api = api
         
         if let task = task {
@@ -28,11 +33,11 @@ class TasksDetailsViewModel: BaseViewModel<NetworkResponse> {
             return
         }
         
-        self.task = Task(id: Int.random(in: 1...10000), title: "", content: "", status: .todo)
+        self.task = TaskModel(id: Int.random(in: 1...10000), title: "", content: "", status: .todo)
         self.strategy = .create
     }
     
-    func update(task id: Int, status: Task.State) {
+    func update(task id: Int, status: TaskModel.State) {
         task.status = status
     }
     
@@ -46,20 +51,16 @@ class TasksDetailsViewModel: BaseViewModel<NetworkResponse> {
     }
     
     private func updateTask() {
-        let publisher = api.update(task)
-        handle(publisher)
+        networkRequest(.submit) {
+            let _ = try await self.api.update(self.task)
+        }
     }
     
     private func createTask() {
-        let publisher = api.create(task)
-            .map { [weak self] response -> NetworkResponse in
-                guard let self = self else { return NetworkResponse(status: response.status) }
-                self.task.id = response.task.id
-                return NetworkResponse(status: response.status)
-            }
-            .eraseToAnyPublisher()
-        
-        handle(publisher)
+        networkRequest(.submit) {
+            let _ = try await self.api.create(self.task)
+            await MainActor.run { self.submitCompleted.send(true) }
+        }
     }
 }
 

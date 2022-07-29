@@ -22,5 +22,5 @@ struct NetworkResponse: Codable {
 
 struct CreateTaskResponse: Codable {
     let status: String
-    let task: Task
+    let task: TaskModel
 }

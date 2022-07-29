@@ -9,14 +9,16 @@ import SwiftUI
 import Combine
 
 struct LoginView: View, Equatable {
-    @ObservedObject private var viewModel: LoginViewModel
-    @State private var isLoginComplete: Bool = false
-    
     @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var errorHandler: ErrorHandler
-    
+
+    @ObservedObject private var viewModel: LoginViewModel
+    @ObservedObject private var errorHandler: LoginErrorHandler
+
+    @State private var isLoginComplete: Bool = false
+        
     init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
+        self.errorHandler = LoginErrorHandler(viewModel: viewModel)
     }
     
     var body: some View {
@@ -41,15 +43,13 @@ struct LoginView: View, Equatable {
             }
             .padding()
             .navigationTitle("Welcome")
-            .onReceive(viewModel.result) { config in
+            .onReceive(viewModel.networkConfig) { config in
                 appState.networkConfig.token = config.token
                 appState.user.email = viewModel.credentials.email
 
                 isLoginComplete = true
             }
-            .onReceive(viewModel.error) { error in
-                errorHandler.handle(error: error)
-            }
+            .errorHandling($errorHandler.currentAlert)
         }
     }
     
@@ -72,13 +72,10 @@ struct LoginView: View, Equatable {
 
 struct LoginView_Previews: PreviewProvider {
     @ObservedObject static private var appState = AppState()
-    @ObservedObject static private var errorHandler = ErrorHandler()
 
     static var previews: some View {
         LoginView(viewModel: LoginViewModel(api: AuthAPI()))
-            .applyErrorHandling()
             .environmentObject(appState)
-            .environmentObject(errorHandler)
     }
 }
 

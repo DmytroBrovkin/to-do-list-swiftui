@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Task: Hashable, Codable, Identifiable, Comparable {
+struct TaskModel: Hashable, Codable, Identifiable, Comparable {
     enum State: String, Codable, Comparable {
         case todo = "to do"
         case inProgress = "in progress"
@@ -31,7 +31,7 @@ struct Task: Hashable, Codable, Identifiable, Comparable {
     var content: String
     var status: State
     
-    static func < (lhs: Task, rhs: Task) -> Bool {
+    static func < (lhs: TaskModel, rhs: TaskModel) -> Bool {
         return lhs.status < rhs.status
     }
 }

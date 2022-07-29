@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B2B37871289399DD0073527E /* LoginErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37870289399DD0073527E /* LoginErrorHandler.swift */; };
+		B2B378732893B5690073527E /* TasksErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B378722893B5690073527E /* TasksErrorHandler.swift */; };
 		FE0F826527E4D5C000D341EC /* AuthAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */; };
 		FE0F826C27E4D83700D341EC /* TaskAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */; };
 		FE0F826D27E4D98000D341EC /* TaskAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */; };
@@ -27,7 +29,7 @@
 		FE53B15027E22EED00C4B82B /* ErrorHandlingViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B14F27E22EED00C4B82B /* ErrorHandlingViewModifier.swift */; };
 		FE53B15527E24ABA00C4B82B /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B15427E24ABA00C4B82B /* Data.swift */; };
 		FE53B15727E24AEA00C4B82B /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B15627E24AEA00C4B82B /* Error.swift */; };
-		FE82427727DEE5D8002DF763 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE82427527DEE5D8002DF763 /* Task.swift */; };
+		FE82427727DEE5D8002DF763 /* TaskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE82427527DEE5D8002DF763 /* TaskModel.swift */; };
 		FE82427827DEE5D8002DF763 /* TaskStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE82427627DEE5D8002DF763 /* TaskStateButton.swift */; };
 		FE82427F27DFC7E5002DF763 /* TaskDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE82427E27DFC7E5002DF763 /* TaskDetailsViewModel.swift */; };
 		FEC2AC0027DBA0E2008FF9B6 /* ToDoListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC2ABD827DBA0DA008FF9B6 /* ToDoListApp.swift */; };
@@ -51,6 +53,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B2B37870289399DD0073527E /* LoginErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrorHandler.swift; sourceTree = "<group>"; };
+		B2B378722893B5690073527E /* TasksErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksErrorHandler.swift; sourceTree = "<group>"; };
 		FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIMock.swift; sourceTree = "<group>"; };
 		FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAPIMock.swift; sourceTree = "<group>"; };
 		FE40D64427E2EC49005485CC /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -69,7 +73,7 @@
 		FE53B14F27E22EED00C4B82B /* ErrorHandlingViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandlingViewModifier.swift; sourceTree = "<group>"; };
 		FE53B15427E24ABA00C4B82B /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		FE53B15627E24AEA00C4B82B /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
-		FE82427527DEE5D8002DF763 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		FE82427527DEE5D8002DF763 /* TaskModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskModel.swift; sourceTree = "<group>"; };
 		FE82427627DEE5D8002DF763 /* TaskStateButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskStateButton.swift; sourceTree = "<group>"; };
 		FE82427E27DFC7E5002DF763 /* TaskDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsViewModel.swift; sourceTree = "<group>"; };
 		FEC2ABD827DBA0DA008FF9B6 /* ToDoListApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListApp.swift; sourceTree = "<group>"; };
@@ -132,6 +136,7 @@
 			children = (
 				FE53B12F27E0DF2300C4B82B /* LoginView.swift */,
 				FE53B13127E0DF2E00C4B82B /* LoginViewModel.swift */,
+				B2B37870289399DD0073527E /* LoginErrorHandler.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -196,7 +201,7 @@
 		FE82427927DEE5DF002DF763 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				FE82427527DEE5D8002DF763 /* Task.swift */,
+				FE82427527DEE5D8002DF763 /* TaskModel.swift */,
 				FE53B13327E0E03D00C4B82B /* User.swift */,
 			);
 			path = Models;
@@ -270,6 +275,7 @@
 				FEC2AC2027DBAD1E008FF9B6 /* TaskRow.swift */,
 				FEC2ABD927DBA0DA008FF9B6 /* TasksView.swift */,
 				FEC2AC1E27DBACD5008FF9B6 /* TasksViewModel.swift */,
+				B2B378722893B5690073527E /* TasksErrorHandler.swift */,
 			);
 			path = TaskList;
 			sourceTree = "<group>";
@@ -404,14 +410,16 @@
 				FE53B14827E1039500C4B82B /* TaskAPI.swift in Sources */,
 				FEC2AC2127DBAD1E008FF9B6 /* TaskRow.swift in Sources */,
 				FE40D64527E2EC49005485CC /* Extension.swift in Sources */,
+				B2B37871289399DD0073527E /* LoginErrorHandler.swift in Sources */,
 				FE53B14227E0F05300C4B82B /* APIHelper.swift in Sources */,
-				FE82427727DEE5D8002DF763 /* Task.swift in Sources */,
+				FE82427727DEE5D8002DF763 /* TaskModel.swift in Sources */,
 				FE82427827DEE5D8002DF763 /* TaskStateButton.swift in Sources */,
 				FE53B13927E0E1B200C4B82B /* AppState.swift in Sources */,
 				FE0F826D27E4D98000D341EC /* TaskAPIMock.swift in Sources */,
 				FE53B15027E22EED00C4B82B /* ErrorHandlingViewModifier.swift in Sources */,
 				FE53B13C27E0E3DE00C4B82B /* TextFieldViewModifier.swift in Sources */,
 				FE53B13427E0E03D00C4B82B /* User.swift in Sources */,
+				B2B378732893B5690073527E /* TasksErrorHandler.swift in Sources */,
 				FE53B14E27E22EBA00C4B82B /* ErrorHandler.swift in Sources */,
 				FE53B14427E0F6B200C4B82B /* URLSession.swift in Sources */,
 				FE53B14A27E103E000C4B82B /* AuthAPI.swift in Sources */,

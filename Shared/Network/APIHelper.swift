@@ -21,46 +21,41 @@ class APIHelper {
     // MARK: - Success block is Array
     func get<T>(path: String,
                 params: [String: String]?,
-                headerParams: [String: String]? = nil) -> AnyPublisher<T, NSError> where T: Decodable {
+                headerParams: [String: String]? = nil) async throws -> T where T: Decodable {
         let urlRequest = self.createGetRequest(path: path, params: params, headerParams: headerParams)
-        return dataTask(with: urlRequest)
+        return try await dataTask(with: urlRequest)
     }
     
-    func post<T, V>(path: String, params: V?) -> AnyPublisher<T, NSError> where T: Decodable, V: Sequence {
+    func post<T, V>(path: String, params: V?) async throws -> T where T: Decodable, V: Sequence {
         let urlRequest = self.createPostRequest(path: path, params: params)
-        return dataTask(with: urlRequest)
+        return try await dataTask(with: urlRequest)
     }
     
-    func put<T>(path: String, params: [String: String]?) -> AnyPublisher<T, NSError> where T: Decodable {
+    func put<T>(path: String, params: [String: String]?) async throws -> T where T: Decodable {
         var urlRequest = self.createGetRequest(path: path, params: params, headerParams: nil)
         urlRequest.httpMethod = "PUT"
-        return dataTask(with: urlRequest)
+        return try await dataTask(with: urlRequest)
     }
 
-    func delete<T>(path: String, params: [String: String]?) -> AnyPublisher<T, NSError> where T: Decodable {
+    func delete<T>(path: String, params: [String: String]?) async throws -> T where T: Decodable {
         var urlRequest = self.createGetRequest(path: path, params: params, headerParams: nil)
         urlRequest.httpMethod = "DELETE"
-        return dataTask(with: urlRequest)
+        return try await dataTask(with: urlRequest)
     }
 
-    private func dataTask<T>(with urlRequest: URLRequest) -> AnyPublisher<T, NSError> where T: Decodable  {
+    private func dataTask<T>(with urlRequest: URLRequest) async throws -> T where T: Decodable {
         print(urlRequest)
-        return session.dataTaskPublisher(for: urlRequest)
-            .tryMap() { element -> Data in
-                guard let httpResponse = element.response as? HTTPURLResponse else { throw NSError.badServerResponse }
-                guard httpResponse.statusCode == 200 else {
-                    let userInfo = element.data.dict ?? [:]
-                    throw NSError(domain: "", code: httpResponse.statusCode, userInfo: userInfo)
-                }
-                print(element.data.dict)
-                print(element.data.array)
-                return element.data
-              }
-            .decode(type: T.self, decoder: JSONDecoder())
-            .mapError { error in
-                error as NSError
-            }
-            .eraseToAnyPublisher()
+        
+        let (data, response) = try await session.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse else { throw NSError.badServerResponse }
+        guard httpResponse.statusCode == 200 else {
+            let userInfo = data.dict ?? [:]
+            throw NSError(domain: "", code: httpResponse.statusCode, userInfo: userInfo)
+        }
+        
+        let decoder = JSONDecoder()
+        return try decoder.decode(T.self, from: data)
     }
     
     // MARK: - Helper funcs

@@ -10,23 +10,36 @@ import SwiftUI
 import Combine
 
 struct ErrorHandlingViewModifier: ViewModifier {
-    @EnvironmentObject private var errorHandler: ErrorHandler
+    @Binding var context: ErrorContext?
 
     func body(content: Content) -> some View {
-        content
-            .alert(item: $errorHandler.currentAlert) { currentAlert in
-                Alert(title: Text("Error"),
-                      message: Text(currentAlert.message),
-                      dismissButton: .default(Text("Ok")) {
-                        currentAlert.dismissAction?()
-                     }
-                )
-            }
+        switch context?.type {
+        case .alert:
+            content
+                .alert(item: $context) { currentAlert in
+                    if currentAlert.retryAction != nil {
+                        return Alert(title: Text(currentAlert.title),
+                                     message: Text(currentAlert.message),
+                                     primaryButton: .default(Text("Ok")),
+                                     secondaryButton: .default(Text("Retry"), action: currentAlert.retryAction))
+                    } else {
+                        return Alert(title: Text(currentAlert.title),
+                              message: Text(currentAlert.message),
+                              dismissButton: .default(Text("Ok"))
+                        )
+                    }
+                }
+        case .errorScreen:
+            // To be implemented
+            content
+        case .none:
+            content
+        }
     }
 }
 
 extension View {
-    func applyErrorHandling() -> some View {
-        modifier(ErrorHandlingViewModifier())
+    func errorHandling(_ context: Binding<ErrorContext?>) -> some View {
+        modifier(ErrorHandlingViewModifier(context: context))
     }
 }
