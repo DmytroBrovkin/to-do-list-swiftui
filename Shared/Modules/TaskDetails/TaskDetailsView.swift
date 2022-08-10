@@ -7,16 +7,20 @@
 
 import SwiftUI
 
+protocol TaskDetailsViewDelegate: AnyObject {
+    func viewDidCompleteTaskUpdate(_ view: TaskDetailsView)
+}
+
 struct TaskDetailsView: View {
     @ObservedObject private var errorHandler: ErrorHandler<TasksDetailsViewModel>
     @ObservedObject private var viewModel: TasksDetailsViewModel
     
-    private weak var router: AppRouter?
+    private weak var delegate: TaskDetailsViewDelegate?
     
-    init(viewModel: TasksDetailsViewModel, router: AppRouter) {
+    init(viewModel: TasksDetailsViewModel, delegate: TaskDetailsViewDelegate) {
         self.viewModel = viewModel
         self.errorHandler = ErrorHandler(viewModel: viewModel)
-        self.router = router
+        self.delegate = delegate
     }
     
     var body: some View {
@@ -47,7 +51,7 @@ struct TaskDetailsView: View {
             }
         }
         .onReceive(viewModel.submitCompleted) { _ in
-            router?.popBack(true)
+            delegate?.viewDidCompleteTaskUpdate(self)
         }
         .onReceive(viewModel.error) { error in
             errorHandler.handle(error: error)
@@ -71,7 +75,7 @@ struct TaskDetailsView_Previews: PreviewProvider {
 
     static var previews: some View {
         TaskDetailsView(viewModel: TasksDetailsViewModel(task: tasks[0], api: TaskAPIMock()),
-                        router: AppRouter())
+                        delegate: AppRouter())
     }
 }
 

@@ -7,16 +7,20 @@
 
 import SwiftUI
 
+protocol TasksViewDelegate: AnyObject {
+    func view(_ view: TasksView, didSelect task: TaskModel?)
+}
+
 struct TasksView: View {    
     @ObservedObject private var errorHandler: TasksErrorHandler
     @ObservedObject private var viewModel: TasksViewModel
     
-    private weak var router: AppRouter?
+    private weak var delegate: TasksViewDelegate?
     
-    init(viewModel: TasksViewModel, router: AppRouter) {
+    init(viewModel: TasksViewModel, delegate: TasksViewDelegate) {
         self.viewModel = viewModel
         self.errorHandler = TasksErrorHandler(viewModel: viewModel)
-        self.router = router
+        self.delegate = delegate
     }
 
     var body: some View {
@@ -28,7 +32,7 @@ struct TasksView: View {
                 // This is needed to cover entire section with tap gesture
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    router?.showTasksDetailsScreen(task)
+                    delegate?.view(self, didSelect: task)
                 }
             }.onDelete(perform: viewModel.delete(at:))
         }
@@ -39,7 +43,7 @@ struct TasksView: View {
         .navigationTitle("To do list")
         .toolbar {
             Button("Add") {
-                router?.showTasksDetailsScreen(nil)
+                delegate?.view(self, didSelect: nil)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -54,7 +58,7 @@ struct TasksView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            TasksView(viewModel: TasksViewModel(api: TaskAPIMock()), router: AppRouter())
+            TasksView(viewModel: TasksViewModel(api: TaskAPIMock()), delegate: AppRouter())
                 .environmentObject(appState)
                 .previewInterfaceOrientation(.portrait)
         }
