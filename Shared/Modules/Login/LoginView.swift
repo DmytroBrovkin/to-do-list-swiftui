@@ -53,11 +53,6 @@ struct LoginView: View {
         }
         .errorHandling($errorHandler.currentAlert)
     }
-    // We ignore all update from @EnvironmentObject, unless View is explicitly Binded with such @Published property.
-    // This is needed to avoid View re-rendering every time @EnvironmentObject is set from any other place in the app.
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        return true
-    }
 }
 
 #if DEBUG
