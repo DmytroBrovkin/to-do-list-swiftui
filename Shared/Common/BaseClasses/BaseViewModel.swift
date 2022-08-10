@@ -18,14 +18,13 @@ class BaseViewModel<T>: ObservableObject, BaseViewModelProtocol {
     var lastRequest: T?
 
     func networkRequest(_ id: T, _ request: @escaping () async throws -> Void) {
-        lastRequest = id
-        
         Task {
             do {
                 try await request()
             }
             catch {
                 await MainActor.run {
+                    lastRequest = id
                     self.error.send(error as NSError)
                 }
             }
