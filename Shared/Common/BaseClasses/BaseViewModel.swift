@@ -17,6 +17,7 @@ class BaseViewModel<T>: ObservableObject, BaseViewModelProtocol {
     let error = PassthroughSubject<NSError, Never>()
     var lastRequest: T?
 
+    @MainActor
     func networkRequest(_ id: T, _ request: @escaping () async throws -> Void) {
         Task {
             do {

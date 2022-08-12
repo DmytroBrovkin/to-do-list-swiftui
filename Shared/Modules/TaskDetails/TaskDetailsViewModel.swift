@@ -41,6 +41,7 @@ class TasksDetailsViewModel: BaseViewModel<TasksDetailsViewModel.NetworkRequest>
         task.status = status
     }
     
+    @MainActor
     func submit() {
         switch strategy {
         case .update:
@@ -50,16 +51,18 @@ class TasksDetailsViewModel: BaseViewModel<TasksDetailsViewModel.NetworkRequest>
         }
     }
     
+    @MainActor
     private func updateTask() {
         networkRequest(.submit) {
             let _ = try await self.api.update(self.task)
         }
     }
     
+    @MainActor
     private func createTask() {
         networkRequest(.submit) {
             let _ = try await self.api.create(self.task)
-            await MainActor.run { self.submitCompleted.send(true) }
+            self.submitCompleted.send(true)
         }
     }
 }

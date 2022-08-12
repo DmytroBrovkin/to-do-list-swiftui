@@ -15,14 +15,14 @@ class LoginErrorHandler: ErrorHandler<LoginViewModel> {
                                         message: "Sign in was not successful",
                                         retryAction: { [weak self] in
                 guard let self = self else { return }
-                self.viewModel.singIn()
+                Task { await self.viewModel.singIn() }
             })
         case .register:
             currentAlert = ErrorContext(title: "Error",
                                         message: "Register was not successful",
                                         retryAction: { [weak self] in
                 guard let self = self else { return }
-                self.viewModel.register()
+                Task { await self.viewModel.register() }
             })
         case .none:
             break

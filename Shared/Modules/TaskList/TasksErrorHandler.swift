@@ -17,14 +17,14 @@ class TasksErrorHandler: ErrorHandler<TasksViewModel> {
                                         message: "Tasks fetch was not successful",
                                         retryAction: { [weak self] in
                 guard let self = self else { return }
-                self.viewModel.loadData()
+                Task { await self.viewModel.loadData() }
             })
         case let .updateTask(id, state):
             currentAlert = ErrorContext(title: "Error",
                                         message: "Task update was not successful",
                                         retryAction: { [weak self] in
                 guard let self = self else { return }
-                self.viewModel.update(task: id, state: state)
+                Task { await self.viewModel.update(task: id, state: state) }
             })
         case .deleteTask:
             currentAlert = ErrorContext(title: "Error",

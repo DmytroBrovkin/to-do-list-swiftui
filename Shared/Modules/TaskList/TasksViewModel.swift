@@ -22,13 +22,15 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
         self.api = api
     }
     
+    @MainActor
     func loadData() {        
         networkRequest(.initial) {
             let result = try await self.api.fetchTasks()
-            await MainActor.run { self.tasks = result }
+            self.tasks = result
         }
     }
     
+    @MainActor
     func update(task id: Int, state: TaskModel.State) {
         guard let index = tasks.firstIndex(where: { $0.id == id }) else { return }
        
@@ -37,7 +39,7 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
             let targetTask = TaskModel(id: currentTask.id, title: currentTask.title, content: currentTask.content, status: state)
             
             let _ = try await self.api.update(targetTask)
-            await MainActor.run { self.tasks[index] = targetTask }
+            self.tasks[index] = targetTask
         }
     }
     
@@ -49,6 +51,7 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
         tasks[index] = task
     }
     
+    @MainActor
     func delete(at indexSet: IndexSet) {
         let indexes = Array(indexSet)
         
@@ -58,7 +61,7 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
             networkRequest(.deleteTask) {
                 let _ = try await self.api.delete(item)
                 guard let targetIndex = self.tasks.firstIndex(where: { $0.id == item.id }) else { return }
-                await MainActor.run { _ = self.tasks.remove(at: targetIndex) }
+                _ = self.tasks.remove(at: targetIndex)
             }
         }
     }

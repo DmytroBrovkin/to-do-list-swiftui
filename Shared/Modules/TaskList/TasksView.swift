@@ -34,12 +34,16 @@ struct TasksView: View {
                 .onTapGesture {
                     delegate?.view(self, didSelect: task)
                 }
-            }.onDelete(perform: viewModel.delete(at:))
+            }.onDelete(perform: { index in
+                Task { viewModel.delete(at: index) }
+            })
         }
         .onReceive(viewModel.error) { error in
             errorHandler.handle(error: error)
         }
-        .onAppear(perform: viewModel.loadData)
+        .onAppear(perform: {
+            Task { viewModel.loadData() }
+        })
         .navigationTitle("To do list")
         .toolbar {
             Button("Add") {

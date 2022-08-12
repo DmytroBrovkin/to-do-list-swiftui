@@ -22,18 +22,20 @@ class LoginViewModel: BaseViewModel<LoginViewModel.NetworkRequest> {
         self.api = api
     }
     
+    @MainActor
     func singIn() {
         networkRequest(.signIn) {
             let result = try await self.api.signIn(email: self.credentials.email, password: self.credentials.password)
-            await MainActor.run { self.networkConfig.send(result) }
+            self.networkConfig.send(result)
         }
     }
     
+    @MainActor
     func register() {
         networkRequest(.register) {
             let _ = try await self.api.register(email: self.credentials.email, password: self.credentials.password)
             let result = try await self.api.signIn(email: self.credentials.email, password: self.credentials.password)
-            await MainActor.run { self.networkConfig.send(result) }
+            self.networkConfig.send(result)
         }
     }
 }
