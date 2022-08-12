@@ -24,10 +24,8 @@ class BaseViewModel<T>: ObservableObject, BaseViewModelProtocol {
                 try await request()
             }
             catch {
-                await MainActor.run {
-                    lastRequest = id
-                    self.error.send(error as NSError)
-                }
+                lastRequest = id
+                self.error.send(error as NSError)
             }
         }
     }
