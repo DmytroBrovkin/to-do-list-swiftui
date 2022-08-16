@@ -36,5 +36,7 @@ class BaseViewModel<T>: ObservableObject, BaseViewModelProtocol {
     
     func handle(_ error: NSError) {
         // implement at the super class
+        currentAlert = ErrorContext(title: "Error",
+                                    message: "Something went wrong. Please try again later")
     }
 }
