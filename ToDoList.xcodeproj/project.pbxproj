@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B2B37871289399DD0073527E /* LoginErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37870289399DD0073527E /* LoginErrorHandler.swift */; };
-		B2B378732893B5690073527E /* TasksErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B378722893B5690073527E /* TasksErrorHandler.swift */; };
 		B2B37877289434260073527E /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37876289434260073527E /* AppRouter.swift */; };
 		B2B37879289434A20073527E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37878289434A20073527E /* AppDelegate.swift */; };
 		FE0F826527E4D5C000D341EC /* AuthAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */; };
@@ -27,7 +25,7 @@
 		FE53B14427E0F6B200C4B82B /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B14327E0F6B200C4B82B /* URLSession.swift */; };
 		FE53B14827E1039500C4B82B /* TaskAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B14727E1039500C4B82B /* TaskAPI.swift */; };
 		FE53B14A27E103E000C4B82B /* AuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B14927E103E000C4B82B /* AuthAPI.swift */; };
-		FE53B14E27E22EBA00C4B82B /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B14D27E22EBA00C4B82B /* ErrorHandler.swift */; };
+		FE53B14E27E22EBA00C4B82B /* ErrorContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B14D27E22EBA00C4B82B /* ErrorContext.swift */; };
 		FE53B15027E22EED00C4B82B /* ErrorHandlingViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B14F27E22EED00C4B82B /* ErrorHandlingViewModifier.swift */; };
 		FE53B15527E24ABA00C4B82B /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B15427E24ABA00C4B82B /* Data.swift */; };
 		FE53B15727E24AEA00C4B82B /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE53B15627E24AEA00C4B82B /* Error.swift */; };
@@ -55,8 +53,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B2B37870289399DD0073527E /* LoginErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrorHandler.swift; sourceTree = "<group>"; };
-		B2B378722893B5690073527E /* TasksErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksErrorHandler.swift; sourceTree = "<group>"; };
 		B2B37876289434260073527E /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		B2B37878289434A20073527E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIMock.swift; sourceTree = "<group>"; };
@@ -73,7 +69,7 @@
 		FE53B14327E0F6B200C4B82B /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
 		FE53B14727E1039500C4B82B /* TaskAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAPI.swift; sourceTree = "<group>"; };
 		FE53B14927E103E000C4B82B /* AuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPI.swift; sourceTree = "<group>"; };
-		FE53B14D27E22EBA00C4B82B /* ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
+		FE53B14D27E22EBA00C4B82B /* ErrorContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorContext.swift; sourceTree = "<group>"; };
 		FE53B14F27E22EED00C4B82B /* ErrorHandlingViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandlingViewModifier.swift; sourceTree = "<group>"; };
 		FE53B15427E24ABA00C4B82B /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		FE53B15627E24AEA00C4B82B /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
@@ -140,7 +136,6 @@
 			children = (
 				FE53B12F27E0DF2300C4B82B /* LoginView.swift */,
 				FE53B13127E0DF2E00C4B82B /* LoginViewModel.swift */,
-				B2B37870289399DD0073527E /* LoginErrorHandler.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -176,17 +171,17 @@
 		FE53B14B27E22EA600C4B82B /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				FE53B14C27E22EAA00C4B82B /* ErrorHandler */,
+				FE53B14C27E22EAA00C4B82B /* ErrorContext */,
 			);
 			path = Components;
 			sourceTree = "<group>";
 		};
-		FE53B14C27E22EAA00C4B82B /* ErrorHandler */ = {
+		FE53B14C27E22EAA00C4B82B /* ErrorContext */ = {
 			isa = PBXGroup;
 			children = (
-				FE53B14D27E22EBA00C4B82B /* ErrorHandler.swift */,
+				FE53B14D27E22EBA00C4B82B /* ErrorContext.swift */,
 			);
-			path = ErrorHandler;
+			path = ErrorContext;
 			sourceTree = "<group>";
 		};
 		FE82427427DEE5CB002DF763 /* Common */ = {
@@ -281,7 +276,6 @@
 				FEC2AC2027DBAD1E008FF9B6 /* TaskRow.swift */,
 				FEC2ABD927DBA0DA008FF9B6 /* TasksView.swift */,
 				FEC2AC1E27DBACD5008FF9B6 /* TasksViewModel.swift */,
-				B2B378722893B5690073527E /* TasksErrorHandler.swift */,
 			);
 			path = TaskList;
 			sourceTree = "<group>";
@@ -416,7 +410,6 @@
 				FE53B14827E1039500C4B82B /* TaskAPI.swift in Sources */,
 				FEC2AC2127DBAD1E008FF9B6 /* TaskRow.swift in Sources */,
 				FE40D64527E2EC49005485CC /* Extension.swift in Sources */,
-				B2B37871289399DD0073527E /* LoginErrorHandler.swift in Sources */,
 				FE53B14227E0F05300C4B82B /* APIHelper.swift in Sources */,
 				FE82427727DEE5D8002DF763 /* TaskModel.swift in Sources */,
 				FE82427827DEE5D8002DF763 /* TaskStateButton.swift in Sources */,
@@ -426,8 +419,7 @@
 				B2B37879289434A20073527E /* AppDelegate.swift in Sources */,
 				FE53B13C27E0E3DE00C4B82B /* TextFieldViewModifier.swift in Sources */,
 				FE53B13427E0E03D00C4B82B /* User.swift in Sources */,
-				B2B378732893B5690073527E /* TasksErrorHandler.swift in Sources */,
-				FE53B14E27E22EBA00C4B82B /* ErrorHandler.swift in Sources */,
+				FE53B14E27E22EBA00C4B82B /* ErrorContext.swift in Sources */,
 				FE53B14427E0F6B200C4B82B /* URLSession.swift in Sources */,
 				FE53B14A27E103E000C4B82B /* AuthAPI.swift in Sources */,
 				FEC2AC1F27DBACD5008FF9B6 /* TasksViewModel.swift in Sources */,

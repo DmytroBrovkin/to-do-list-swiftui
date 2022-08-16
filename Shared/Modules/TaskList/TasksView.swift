@@ -12,14 +12,12 @@ protocol TasksViewDelegate: AnyObject {
 }
 
 struct TasksView: View {    
-    @ObservedObject private var errorHandler: TasksErrorHandler
     @ObservedObject private var viewModel: TasksViewModel
     
     private weak var delegate: TasksViewDelegate?
     
     init(viewModel: TasksViewModel, delegate: TasksViewDelegate) {
         self.viewModel = viewModel
-        self.errorHandler = TasksErrorHandler(viewModel: viewModel)
         self.delegate = delegate
     }
 
@@ -38,9 +36,6 @@ struct TasksView: View {
                 Task { viewModel.delete(at: index) }
             })
         }
-        .onReceive(viewModel.error) { error in
-            errorHandler.handle(error: error)
-        }
         .onAppear(perform: {
             Task { viewModel.loadData() }
         })
@@ -51,7 +46,7 @@ struct TasksView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .errorHandling($errorHandler.currentAlert)
+        .errorHandling($viewModel.currentAlert)
     }
 }
 

@@ -12,14 +12,12 @@ protocol TaskDetailsViewDelegate: AnyObject {
 }
 
 struct TaskDetailsView: View {
-    @ObservedObject private var errorHandler: ErrorHandler<TasksDetailsViewModel>
     @ObservedObject private var viewModel: TasksDetailsViewModel
     
     private weak var delegate: TaskDetailsViewDelegate?
     
     init(viewModel: TasksDetailsViewModel, delegate: TaskDetailsViewDelegate) {
         self.viewModel = viewModel
-        self.errorHandler = ErrorHandler(viewModel: viewModel)
         self.delegate = delegate
     }
     
@@ -53,12 +51,9 @@ struct TaskDetailsView: View {
         .onReceive(viewModel.submitCompleted) { _ in
             delegate?.viewDidCompleteTaskUpdate(self)
         }
-        .onReceive(viewModel.error) { error in
-            errorHandler.handle(error: error)
-        }
         .padding()
         .navigationTitle("Add task")
-        .errorHandling($errorHandler.currentAlert)
+        .errorHandling($viewModel.currentAlert)
 
         Button("Submit") {
             viewModel.submit()

@@ -14,6 +14,8 @@ protocol BaseViewModelProtocol {
 }
 
 class BaseViewModel<T>: ObservableObject, BaseViewModelProtocol {
+    @Published var currentAlert: ErrorContext?
+    
     let error = PassthroughSubject<NSError, Never>()
     var lastRequest: T?
 
@@ -26,7 +28,13 @@ class BaseViewModel<T>: ObservableObject, BaseViewModelProtocol {
             catch {
                 lastRequest = id
                 self.error.send(error as NSError)
+                handle(error as NSError)
             }
         }
+    }
+    
+    
+    func handle(_ error: NSError) {
+        // implement at the super class
     }
 }

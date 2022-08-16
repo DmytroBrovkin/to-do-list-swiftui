@@ -16,13 +16,11 @@ struct LoginView: View {
     @EnvironmentObject private var appState: AppState
 
     @ObservedObject private var viewModel: LoginViewModel
-    @ObservedObject private var errorHandler: LoginErrorHandler
 
     private weak var delegate: LoginViewDelegate?
         
     init(viewModel: LoginViewModel, delegate: LoginViewDelegate) {
         self.viewModel = viewModel
-        self.errorHandler = LoginErrorHandler(viewModel: viewModel)
         self.delegate = delegate
     }
     
@@ -51,7 +49,7 @@ struct LoginView: View {
             
             delegate?.viewDidCompleteAuth(self)
         }
-        .errorHandling($errorHandler.currentAlert)
+        .errorHandling($viewModel.currentAlert)
     }
 }
 

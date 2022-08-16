@@ -38,4 +38,25 @@ class LoginViewModel: BaseViewModel<LoginViewModel.NetworkRequest> {
             self.networkConfig.send(result)
         }
     }
+    
+    override func handle(_ error: NSError) {
+        switch self.lastRequest {
+        case .signIn:
+            currentAlert = ErrorContext(title: "Error",
+                                        message: "Sign in was not successful",
+                                        retryAction: { [weak self] in
+                guard let self = self else { return }
+                Task { await self.singIn() }
+            })
+        case .register:
+            currentAlert = ErrorContext(title: "Error",
+                                        message: "Register was not successful",
+                                        retryAction: { [weak self] in
+                guard let self = self else { return }
+                Task { await self.register() }
+            })
+        case .none:
+            break
+        }
+    }
 }

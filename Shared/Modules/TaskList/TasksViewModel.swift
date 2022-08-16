@@ -65,4 +65,30 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
             }
         }
     }
+    
+    override func handle(_ error: NSError) {
+        guard currentAlert == nil else { return }
+        
+        switch self.lastRequest {
+        case .initial:
+            currentAlert = ErrorContext(title: "Error",
+                                        message: "Tasks fetch was not successful",
+                                        retryAction: { [weak self] in
+                guard let self = self else { return }
+                Task { await self.loadData() }
+            })
+        case let .updateTask(id, state):
+            currentAlert = ErrorContext(title: "Error",
+                                        message: "Task update was not successful",
+                                        retryAction: { [weak self] in
+                guard let self = self else { return }
+                Task { await self.update(task: id, state: state) }
+            })
+        case .deleteTask:
+            currentAlert = ErrorContext(title: "Error",
+                                        message: "Task delete was not successful")
+        case .none:
+            break
+        }
+    }
 }
