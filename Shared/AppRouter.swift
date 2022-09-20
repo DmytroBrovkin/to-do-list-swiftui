@@ -15,9 +15,10 @@ class AppRouter {
     
     func showInitialScreen() {
         let loginAPI = AuthAPI()
-        let viewModel = LoginViewModel(api: loginAPI)
-        let view = LoginView(viewModel: viewModel, delegate: self)
-            .environmentObject(appState)
+        let viewModel = LoginViewModel(api: loginAPI,
+                                       delegate: self,
+                                       appState: appState)
+        let view = LoginView(viewModel: viewModel)
         
         let controller = UIHostingController(rootView: view)
         navigationController.viewControllers = [controller]
@@ -25,16 +26,18 @@ class AppRouter {
     
     private func showTasksScreen() {
         let api = TaskAPI(authKey: appState.networkConfig.token)
-        let viewModel = TasksViewModel(api: api)
-        let view = TasksView(viewModel: viewModel, delegate: self)
+        let viewModel = TasksViewModel(api: api, delegate: self)
+        let view = TasksView(viewModel: viewModel)
         
         let controller = UIHostingController(rootView: view)
         navigationController.show(controller, sender: nil)
     }
     
     private func showTasksDetailsScreen(_ task: TaskModel?) {
-        let viewModel = TasksDetailsViewModel(task: task, api: TaskAPI(authKey: appState.networkConfig.token))
-        let view = TaskDetailsView(viewModel: viewModel, delegate: self)
+        let viewModel = TasksDetailsViewModel(task: task,
+                                              delegate: self,
+                                              api: TaskAPI(authKey: appState.networkConfig.token))
+        let view = TaskDetailsView(viewModel: viewModel)
         
         let controller = UIHostingController(rootView: view)
         navigationController.show(controller, sender: nil)
@@ -45,21 +48,21 @@ class AppRouter {
     }
 }
 
-
-extension AppRouter: LoginViewDelegate {
-    func viewDidCompleteAuth(_ view: LoginView) {
+extension AppRouter: LoginViewModelDelegate {
+    func viewModelDidCompleteAuth(_ viewModel: LoginViewModel) {
         showTasksScreen()
     }
 }
 
-extension AppRouter: TasksViewDelegate {
-    func view(_ view: TasksView, didSelect task: TaskModel?) {
+extension AppRouter: TasksViewModelDelegate {
+    func viewModel(_ viewModel: TasksViewModel, didSelect task: TaskModel?) {
         showTasksDetailsScreen(task)
     }
 }
 
-extension AppRouter: TaskDetailsViewDelegate {
-    func viewDidCompleteTaskUpdate(_ view: TaskDetailsView) {
+extension AppRouter: TaskDetailsViewModelDelegate {
+    func viewModelDidCompleteTaskUpdate(_ viewModel: TasksDetailsViewModel) {
         popBack(true)
     }
 }
+

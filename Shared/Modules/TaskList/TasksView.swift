@@ -7,18 +7,12 @@
 
 import SwiftUI
 
-protocol TasksViewDelegate: AnyObject {
-    func view(_ view: TasksView, didSelect task: TaskModel?)
-}
 
 struct TasksView: View {    
     @ObservedObject private var viewModel: TasksViewModel
-    
-    private weak var delegate: TasksViewDelegate?
-    
-    init(viewModel: TasksViewModel, delegate: TasksViewDelegate) {
+        
+    init(viewModel: TasksViewModel) {
         self.viewModel = viewModel
-        self.delegate = delegate
     }
 
     var body: some View {
@@ -30,7 +24,7 @@ struct TasksView: View {
                 // This is needed to cover entire section with tap gesture
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    delegate?.view(self, didSelect: task)
+                    viewModel.onSelect(task)
                 }
             }.onDelete(perform: { index in
                 Task { viewModel.delete(at: index) }
@@ -42,7 +36,7 @@ struct TasksView: View {
         .navigationTitle("To do list")
         .toolbar {
             Button("Add") {
-                delegate?.view(self, didSelect: nil)
+                viewModel.onSelect(nil)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -57,8 +51,7 @@ struct TasksView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            TasksView(viewModel: TasksViewModel(api: TaskAPIMock()), delegate: AppRouter())
-                .environmentObject(appState)
+            TasksView(viewModel: TasksViewModel(api: TaskAPIMock(), delegate: AppRouter()))
                 .previewInterfaceOrientation(.portrait)
         }
     }

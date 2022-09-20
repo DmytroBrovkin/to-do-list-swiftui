@@ -29,7 +29,7 @@ struct TaskRow: View {
 #if DEBUG
 
 struct TaskRow_Previews: PreviewProvider {
-    @ObservedObject static private var viewModel = TasksViewModel(api: TaskAPI())
+    @ObservedObject static private var viewModel = TasksViewModel(api: TaskAPI(), delegate: AppRouter())
     
     static var previews: some View {
         TaskRow(task: viewModel.tasks[0]) { id, state in }

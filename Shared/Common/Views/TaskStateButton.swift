@@ -43,7 +43,7 @@ struct TaskStateButton: View {
 #if DEBUG
 
 struct TaskStateButton_Previews: PreviewProvider {
-    @ObservedObject static private var viewModel = TasksViewModel(api: TaskAPI())
+    @ObservedObject static private var viewModel = TasksViewModel(api: TaskAPI(), delegate: AppRouter())
 
     static var previews: some View {
         TaskStateButton(task: viewModel.tasks[0]) { id, state in }

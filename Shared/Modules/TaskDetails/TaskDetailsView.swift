@@ -7,18 +7,13 @@
 
 import SwiftUI
 
-protocol TaskDetailsViewDelegate: AnyObject {
-    func viewDidCompleteTaskUpdate(_ view: TaskDetailsView)
-}
+
 
 struct TaskDetailsView: View {
     @ObservedObject private var viewModel: TasksDetailsViewModel
-    
-    private weak var delegate: TaskDetailsViewDelegate?
-    
-    init(viewModel: TasksDetailsViewModel, delegate: TaskDetailsViewDelegate) {
+        
+    init(viewModel: TasksDetailsViewModel) {
         self.viewModel = viewModel
-        self.delegate = delegate
     }
     
     var body: some View {
@@ -48,9 +43,6 @@ struct TaskDetailsView: View {
                 }
             }
         }
-        .onReceive(viewModel.submitCompleted) { _ in
-            delegate?.viewDidCompleteTaskUpdate(self)
-        }
         .padding()
         .navigationTitle("Add task")
         .errorHandling($viewModel.currentAlert)
@@ -69,8 +61,7 @@ struct TaskDetailsView_Previews: PreviewProvider {
     static private let tasks: [TaskModel] = load("Task.json")
 
     static var previews: some View {
-        TaskDetailsView(viewModel: TasksDetailsViewModel(task: tasks[0], api: TaskAPIMock()),
-                        delegate: AppRouter())
+        TaskDetailsView(viewModel: TasksDetailsViewModel(task: tasks[0], delegate: AppRouter(), api: TaskAPIMock()))
     }
 }
 

@@ -8,20 +8,11 @@
 import SwiftUI
 import Combine
 
-protocol LoginViewDelegate: AnyObject {
-    func viewDidCompleteAuth(_ view: LoginView)
-}
-
 struct LoginView: View {
-    @EnvironmentObject private var appState: AppState
-
     @ObservedObject private var viewModel: LoginViewModel
-
-    private weak var delegate: LoginViewDelegate?
         
-    init(viewModel: LoginViewModel, delegate: LoginViewDelegate) {
+    init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
-        self.delegate = delegate
     }
     
     var body: some View {
@@ -43,12 +34,6 @@ struct LoginView: View {
         }
         .padding()
         .navigationTitle("Welcome")
-        .onReceive(viewModel.networkConfig) { config in
-            appState.networkConfig.token = config.token
-            appState.user.email = viewModel.credentials.email
-            
-            delegate?.viewDidCompleteAuth(self)
-        }
         .errorHandling($viewModel.currentAlert)
     }
 }
@@ -60,11 +45,9 @@ struct LoginView_Previews: PreviewProvider {
 
     static var previews: some View {
         Group {
-            LoginView(viewModel: LoginViewModel(api: AuthAPI()), delegate: AppRouter())
-                .environmentObject(appState)
-            LoginView(viewModel: LoginViewModel(api: AuthAPI()), delegate: AppRouter())
+            LoginView(viewModel: LoginViewModel(api: AuthAPI(), delegate: AppRouter(), appState: appState))
+            LoginView(viewModel: LoginViewModel(api: AuthAPI(), delegate: AppRouter(), appState: appState))
                 .previewDevice("iPad Pro (9.7-inch)")
-                .environmentObject(appState)
         }
     }
 }

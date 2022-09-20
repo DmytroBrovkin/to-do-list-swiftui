@@ -8,25 +8,34 @@
 import Combine
 import SwiftUI
 
+protocol LoginViewModelDelegate: AnyObject {
+    func viewModelDidCompleteAuth(_ viewModel: LoginViewModel)
+}
+
 class LoginViewModel: BaseViewModel<LoginViewModel.NetworkRequest> {
     enum NetworkRequest {
         case signIn, register
     }
     
     @Published var credentials: AuthCredentials = AuthCredentials(email: "dimitri@gmail.com", password: "testtest")
-    let networkConfig = PassthroughSubject<NetworkConfig, Never>()
     
     private let api: AuthAPIProtocol
-
-    required init(api: AuthAPIProtocol) {
+    private weak var delegate: LoginViewModelDelegate?
+    private var appState: AppState
+    
+    required init(api: AuthAPIProtocol,
+                  delegate: LoginViewModelDelegate,
+                  appState: AppState) {
         self.api = api
+        self.delegate = delegate
+        self.appState = appState
     }
     
     @MainActor
     func singIn() {
         networkRequest(.signIn) {
             let result = try await self.api.signIn(email: self.credentials.email, password: self.credentials.password)
-            self.networkConfig.send(result)
+            self.handle(result)
         }
     }
     
@@ -35,8 +44,15 @@ class LoginViewModel: BaseViewModel<LoginViewModel.NetworkRequest> {
         networkRequest(.register) {
             let _ = try await self.api.register(email: self.credentials.email, password: self.credentials.password)
             let result = try await self.api.signIn(email: self.credentials.email, password: self.credentials.password)
-            self.networkConfig.send(result)
+            self.handle(result)
         }
+    }
+    
+    private func handle(_ result: NetworkConfig) {
+        appState.networkConfig.token = result.token
+        appState.user.email = credentials.email
+        
+        self.delegate?.viewModelDidCompleteAuth(self)
     }
     
     override func handle(_ error: NSError) {

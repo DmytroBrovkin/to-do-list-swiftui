@@ -8,6 +8,10 @@
 import Foundation
 import Combine
 
+protocol TaskDetailsViewModelDelegate: AnyObject {
+    func viewModelDidCompleteTaskUpdate(_ viewModel: TasksDetailsViewModel)
+}
+
 class TasksDetailsViewModel: BaseViewModel<TasksDetailsViewModel.NetworkRequest> {
     enum NetworkRequest {
         case submit
@@ -18,14 +22,17 @@ class TasksDetailsViewModel: BaseViewModel<TasksDetailsViewModel.NetworkRequest>
     }
     
     @Published var task: TaskModel
-    let submitCompleted = PassthroughSubject<Bool, Never>()
     
-    private var subscribers = Set<AnyCancellable>()
     private var strategy: Strategy
-    private var api: TaskAPIProtocol
+    private let subscribers = Set<AnyCancellable>()
+    private let api: TaskAPIProtocol
+    private weak var delegate: TaskDetailsViewModelDelegate?
     
-    init(task: TaskModel?, api: TaskAPIProtocol) {
+    init(task: TaskModel?,
+         delegate: TaskDetailsViewModelDelegate,
+         api: TaskAPIProtocol) {
         self.api = api
+        self.delegate = delegate
         
         if let task = task {
             self.task = task
@@ -62,7 +69,7 @@ class TasksDetailsViewModel: BaseViewModel<TasksDetailsViewModel.NetworkRequest>
     private func createTask() {
         networkRequest(.submit) {
             let _ = try await self.api.create(self.task)
-            self.submitCompleted.send(true)
+            self.delegate?.viewModelDidCompleteTaskUpdate(self)
         }
     }
 }

@@ -8,6 +8,12 @@
 import SwiftUI
 import Combine
 
+
+protocol TasksViewModelDelegate: AnyObject {
+    func viewModel(_ viewModel: TasksViewModel, didSelect task: TaskModel?)
+}
+
+
 class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
     enum NetworkRequest {
         case initial, updateTask(Int, TaskModel.State), deleteTask
@@ -17,9 +23,11 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
     var sortedTasks: [TaskModel] { return tasks.sorted(by: { $0 < $1 }) }
     
     private var api: TaskAPIProtocol
+    private weak var delegate: TasksViewModelDelegate?
     
-    init(api: TaskAPIProtocol) {
+    init(api: TaskAPIProtocol, delegate: TasksViewModelDelegate) {
         self.api = api
+        self.delegate = delegate
     }
     
     @MainActor
@@ -64,6 +72,10 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
                 _ = self.tasks.remove(at: targetIndex)
             }
         }
+    }
+    
+    func onSelect(_ task: TaskModel?) {
+        delegate?.viewModel(self, didSelect: task)
     }
     
     override func handle(_ error: NSError) {
