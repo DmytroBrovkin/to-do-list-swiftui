@@ -22,7 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window!.backgroundColor = .black
         window!.makeKeyAndVisible()
         
-        appRouter.showInitialScreen()
+        appRouter.showInitialNavigationScreen()
+        // Use this code to have Tabbar layour example
+        // appRouter.showInitialTabbar()
         
         return true
     }

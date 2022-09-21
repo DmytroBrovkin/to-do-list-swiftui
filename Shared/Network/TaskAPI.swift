@@ -16,11 +16,21 @@ protocol TaskAPIProtocol {
 }
 
 class TaskAPI: APIHelper, TaskAPIProtocol {
+    private let appState: AppState
+    
+    init(appState: AppState) {
+        self.appState = appState
+        super.init()
+    }
+    
     func fetchTasks()async throws -> [TaskModel] {
+        self.authKey = appState.networkConfig.token
         return try await get(path: "task/all", params: nil)
     }
     
     func update(_ task: TaskModel) async throws -> NetworkResponse {
+        self.authKey = appState.networkConfig.token
+        
         let params = [
             "id": "\(task.id)",
             "status": task.status.rawValue,
@@ -32,6 +42,8 @@ class TaskAPI: APIHelper, TaskAPIProtocol {
     }
     
     func create(_ task: TaskModel) async throws -> CreateTaskResponse {
+        self.authKey = appState.networkConfig.token
+        
         let params = [
             "status": task.status.rawValue,
             "title": task.title,
@@ -43,6 +55,8 @@ class TaskAPI: APIHelper, TaskAPIProtocol {
     }
     
     func delete(_ task: TaskModel) async throws -> NetworkResponse {
+        self.authKey = appState.networkConfig.token
+        
         let params = [
             "id": "\(task.id)"
         ]

@@ -12,8 +12,9 @@ import SwiftUI
 class AppRouter {
     let navigationController = UINavigationController()
     @ObservedObject var appState = AppState()
+    private var isTabbBarApproach = false
     
-    func showInitialScreen() {
+    func showInitialNavigationScreen() {
         let loginAPI = AuthAPI()
         let viewModel = LoginViewModel(api: loginAPI,
                                        delegate: self,
@@ -24,8 +25,22 @@ class AppRouter {
         navigationController.viewControllers = [controller]
     }
     
+    func showInitialTabbar() {
+        isTabbBarApproach = true
+        
+        let factory = TabbarFactory(loginDelegate: self,
+                                    tasksDelegate: self,
+                                    appState: appState)
+        let tabbarView = TabbarView(factory: factory)
+
+        let controller = UIHostingController(rootView: tabbarView)
+        navigationController.viewControllers = [controller]
+    }
+    
     private func showTasksScreen() {
-        let api = TaskAPI(authKey: appState.networkConfig.token)
+        guard !isTabbBarApproach else { return }
+        
+        let api = TaskAPI(appState: appState)
         let viewModel = TasksViewModel(api: api, delegate: self)
         let view = TasksView(viewModel: viewModel)
         
@@ -36,7 +51,7 @@ class AppRouter {
     private func showTasksDetailsScreen(_ task: TaskModel?) {
         let viewModel = TasksDetailsViewModel(task: task,
                                               delegate: self,
-                                              api: TaskAPI(authKey: appState.networkConfig.token))
+                                              api: TaskAPI(appState: appState))
         let view = TaskDetailsView(viewModel: viewModel)
         
         let controller = UIHostingController(rootView: view)

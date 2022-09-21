@@ -10,7 +10,7 @@ import Combine
 class APIHelper {
     private let session: URLSession
     private let baseUrl: URL
-    private var authKey: String?
+    var authKey: String?
     
     init(baseUrl: URL = URL(string: "https://education.octodev.net/api/v1")!, authKey: String? = nil) {
         self.baseUrl = baseUrl

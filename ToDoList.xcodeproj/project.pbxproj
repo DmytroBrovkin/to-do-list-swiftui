@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		B2B37877289434260073527E /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37876289434260073527E /* AppRouter.swift */; };
 		B2B37879289434A20073527E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37878289434A20073527E /* AppDelegate.swift */; };
+		B2CEFCDE28DB433E009B29EE /* Tabbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CEFCDD28DB433E009B29EE /* Tabbar.swift */; };
+		B2CEFCE028DB48F1009B29EE /* TabbarFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CEFCDF28DB48F1009B29EE /* TabbarFactory.swift */; };
 		FE0F826527E4D5C000D341EC /* AuthAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */; };
 		FE0F826C27E4D83700D341EC /* TaskAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */; };
 		FE0F826D27E4D98000D341EC /* TaskAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */; };
@@ -55,6 +57,8 @@
 /* Begin PBXFileReference section */
 		B2B37876289434260073527E /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		B2B37878289434A20073527E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B2CEFCDD28DB433E009B29EE /* Tabbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabbar.swift; sourceTree = "<group>"; };
+		B2CEFCDF28DB48F1009B29EE /* TabbarFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarFactory.swift; sourceTree = "<group>"; };
 		FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIMock.swift; sourceTree = "<group>"; };
 		FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAPIMock.swift; sourceTree = "<group>"; };
 		FE40D64427E2EC49005485CC /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -106,6 +110,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B2CEFCDC28DB4336009B29EE /* Tabbar */ = {
+			isa = PBXGroup;
+			children = (
+				B2CEFCDF28DB48F1009B29EE /* TabbarFactory.swift */,
+				B2CEFCDD28DB433E009B29EE /* Tabbar.swift */,
+			);
+			path = Tabbar;
+			sourceTree = "<group>";
+		};
 		FE0F821B27E4D38B00D341EC /* Tests iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -263,6 +276,7 @@
 		FEC2AC2227DBC420008FF9B6 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				B2CEFCDC28DB4336009B29EE /* Tabbar */,
 				FE53B12E27E0DE5500C4B82B /* Login */,
 				FEC2AC2327DBC427008FF9B6 /* TaskList */,
 				FEC2AC2427DBC42F008FF9B6 /* TaskDetails */,
@@ -402,6 +416,7 @@
 				FEC2AC0227DBA0E2008FF9B6 /* TasksView.swift in Sources */,
 				FEC2AC2627DBC466008FF9B6 /* TaskDetailsView.swift in Sources */,
 				FE53B13F27E0E4DE00C4B82B /* TextEditor.swift in Sources */,
+				B2CEFCDE28DB433E009B29EE /* Tabbar.swift in Sources */,
 				FE53B13227E0DF2E00C4B82B /* LoginViewModel.swift in Sources */,
 				FE82427F27DFC7E5002DF763 /* TaskDetailsViewModel.swift in Sources */,
 				FED0571127E283A3007743D4 /* BaseViewModel.swift in Sources */,
@@ -410,6 +425,7 @@
 				FE53B14827E1039500C4B82B /* TaskAPI.swift in Sources */,
 				FEC2AC2127DBAD1E008FF9B6 /* TaskRow.swift in Sources */,
 				FE40D64527E2EC49005485CC /* Extension.swift in Sources */,
+				B2CEFCE028DB48F1009B29EE /* TabbarFactory.swift in Sources */,
 				FE53B14227E0F05300C4B82B /* APIHelper.swift in Sources */,
 				FE82427727DEE5D8002DF763 /* TaskModel.swift in Sources */,
 				FE82427827DEE5D8002DF763 /* TaskStateButton.swift in Sources */,
