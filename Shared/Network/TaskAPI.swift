@@ -15,6 +15,10 @@ protocol TaskAPIProtocol {
     func delete(_ task: TaskModel) async throws -> NetworkResponse
 }
 
+enum TaskAPIErrors: Error {
+    case fetchTaskFfailed, updateTaskFailed(TaskModel), createTaskFailed(TaskModel), deleteTaskFailed(TaskModel)
+}
+
 class TaskAPI: APIHelper, TaskAPIProtocol {
     private let appState: AppState
     
@@ -25,7 +29,9 @@ class TaskAPI: APIHelper, TaskAPIProtocol {
     
     func fetchTasks()async throws -> [TaskModel] {
         self.authKey = appState.networkConfig.token
-        return try await get(path: "task/all", params: nil)
+        
+        let dtm = DynatraceEvent("Fetch tasks event")
+        return try await get(path: "task/all", params: nil, dtmEvent: dtm, error: TaskAPIErrors.fetchTaskFfailed)
     }
     
     func update(_ task: TaskModel) async throws -> NetworkResponse {
@@ -38,7 +44,8 @@ class TaskAPI: APIHelper, TaskAPIProtocol {
             "content": task.content
         ]
         
-        return try await post(path: "task/update", params: params)
+         let dtm = DynatraceEvent("Update task event")
+        return try await post(path: "task/update", params: params, dtmEvent: dtm, error: TaskAPIErrors.updateTaskFailed(task))
     }
     
     func create(_ task: TaskModel) async throws -> CreateTaskResponse {
@@ -51,7 +58,8 @@ class TaskAPI: APIHelper, TaskAPIProtocol {
             "content": task.content
         ]
         
-        return try await post(path: "task", params: params)
+        let dtm = DynatraceEvent("Update task event")
+        return try await post(path: "task", params: params, dtmEvent: dtm, error: TaskAPIErrors.createTaskFailed(task))
     }
     
     func delete(_ task: TaskModel) async throws -> NetworkResponse {
@@ -61,6 +69,7 @@ class TaskAPI: APIHelper, TaskAPIProtocol {
             "id": "\(task.id)"
         ]
         
-        return try await post(path: "task/delete", params: params)
+        let dtm = DynatraceEvent("Update task event")
+        return try await post(path: "task/delete", params: params, dtmEvent: dtm, error: TaskAPIErrors.deleteTaskFailed(task))
     }
 }

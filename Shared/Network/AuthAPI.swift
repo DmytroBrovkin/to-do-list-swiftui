@@ -14,14 +14,19 @@ protocol AuthAPIProtocol {
     func register(email: String, password: String) async throws -> NetworkResponse
 }
 
+enum AuthAPIErrors: Error {
+    case loginFailed, registerFailed
+}
+
 class AuthAPI: APIHelper, AuthAPIProtocol {
     func signIn(email: String, password: String) async throws -> NetworkConfig {
         let params = [
-            "email": email,
-            "password": password
-        ]
-        
-        return try await post(path: "auth", params: params)
+                "email": email,
+                "password": password
+            ]
+            
+        let dtm = DynatraceEvent("Login event")
+        return try await post(path: "auth", params: params, dtmEvent: dtm, error: AuthAPIErrors.loginFailed)
     }
     
     func register(email: String, password: String) async throws -> NetworkResponse {
@@ -30,6 +35,7 @@ class AuthAPI: APIHelper, AuthAPIProtocol {
             "password": password
            ]
         
-        return try await post(path: "register", params: params)
+        let dtm = DynatraceEvent("Register event")
+        return try await post(path: "register", params: params, dtmEvent: dtm, error: AuthAPIErrors.registerFailed)
     }
 }

@@ -11,6 +11,7 @@
 		B2B37879289434A20073527E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B37878289434A20073527E /* AppDelegate.swift */; };
 		B2CEFCDE28DB433E009B29EE /* Tabbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CEFCDD28DB433E009B29EE /* Tabbar.swift */; };
 		B2CEFCE028DB48F1009B29EE /* TabbarFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CEFCDF28DB48F1009B29EE /* TabbarFactory.swift */; };
+		B2D93DB228E6061D0010FA72 /* DynatraceEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D93DB128E6061D0010FA72 /* DynatraceEvent.swift */; };
 		FE0F826527E4D5C000D341EC /* AuthAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */; };
 		FE0F826C27E4D83700D341EC /* TaskAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */; };
 		FE0F826D27E4D98000D341EC /* TaskAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */; };
@@ -59,6 +60,7 @@
 		B2B37878289434A20073527E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2CEFCDD28DB433E009B29EE /* Tabbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabbar.swift; sourceTree = "<group>"; };
 		B2CEFCDF28DB48F1009B29EE /* TabbarFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarFactory.swift; sourceTree = "<group>"; };
+		B2D93DB128E6061D0010FA72 /* DynatraceEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynatraceEvent.swift; sourceTree = "<group>"; };
 		FE0F826427E4D5C000D341EC /* AuthAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIMock.swift; sourceTree = "<group>"; };
 		FE0F826B27E4D83700D341EC /* TaskAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAPIMock.swift; sourceTree = "<group>"; };
 		FE40D64427E2EC49005485CC /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -117,6 +119,14 @@
 				B2CEFCDD28DB433E009B29EE /* Tabbar.swift */,
 			);
 			path = Tabbar;
+			sourceTree = "<group>";
+		};
+		B2D93DB028E606170010FA72 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				B2D93DB128E6061D0010FA72 /* DynatraceEvent.swift */,
+			);
+			path = Analytics;
 			sourceTree = "<group>";
 		};
 		FE0F821B27E4D38B00D341EC /* Tests iOS */ = {
@@ -200,6 +210,7 @@
 		FE82427427DEE5CB002DF763 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				B2D93DB028E606170010FA72 /* Analytics */,
 				FED0570F27E28390007743D4 /* BaseClasses */,
 				FE53B14B27E22EA600C4B82B /* Components */,
 				FE53B13727E0E1A700C4B82B /* AppState */,
@@ -422,6 +433,7 @@
 				FED0571127E283A3007743D4 /* BaseViewModel.swift in Sources */,
 				FE53B15527E24ABA00C4B82B /* Data.swift in Sources */,
 				FEC2AC0027DBA0E2008FF9B6 /* ToDoListApp.swift in Sources */,
+				B2D93DB228E6061D0010FA72 /* DynatraceEvent.swift in Sources */,
 				FE53B14827E1039500C4B82B /* TaskAPI.swift in Sources */,
 				FEC2AC2127DBAD1E008FF9B6 /* TaskRow.swift in Sources */,
 				FE40D64527E2EC49005485CC /* Extension.swift in Sources */,

@@ -14,11 +14,7 @@ protocol TasksViewModelDelegate: AnyObject {
 }
 
 
-class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
-    enum NetworkRequest {
-        case initial, updateTask(Int, TaskModel.State), deleteTask
-    }
-    
+class TasksViewModel: BaseViewModel {
     @Published private(set) var tasks: [TaskModel] = []
     var sortedTasks: [TaskModel] { return tasks.sorted(by: { $0 < $1 }) }
     
@@ -32,7 +28,7 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
     
     @MainActor
     func loadData() {        
-        networkRequest(.initial) {
+        networkRequest {
             let result = try await self.api.fetchTasks()
             self.tasks = result
         }
@@ -42,7 +38,7 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
     func update(task id: Int, state: TaskModel.State) {
         guard let index = tasks.firstIndex(where: { $0.id == id }) else { return }
        
-        networkRequest(.updateTask(id, state)) {
+        networkRequest {
             let currentTask = self.tasks[index]
             let targetTask = TaskModel(id: currentTask.id, title: currentTask.title, content: currentTask.content, status: state)
             
@@ -66,7 +62,7 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
         for index in indexes {
             let item = sortedTasks[index]
             
-            networkRequest(.deleteTask) {
+            networkRequest {
                 let _ = try await self.api.delete(item)
                 guard let targetIndex = self.tasks.firstIndex(where: { $0.id == item.id }) else { return }
                 _ = self.tasks.remove(at: targetIndex)
@@ -78,28 +74,31 @@ class TasksViewModel: BaseViewModel<TasksViewModel.NetworkRequest> {
         delegate?.viewModel(self, didSelect: task)
     }
     
-    override func handle(_ error: NSError) {
+    override func handle(_ error: Error) {
         guard currentAlert == nil else { return }
         
-        switch self.lastRequest {
-        case .initial:
+        switch error {
+        case TaskAPIErrors.fetchTaskFfailed:
             currentAlert = ErrorContext(title: "Error",
                                         message: "Tasks fetch was not successful",
                                         retryAction: { [weak self] in
                 guard let self = self else { return }
                 Task { await self.loadData() }
             })
-        case let .updateTask(id, state):
+        case let TaskAPIErrors.updateTaskFailed(task):
             currentAlert = ErrorContext(title: "Error",
-                                        message: "Task update was not successful",
+                                        message: "Task id - \(task.id), update was not successful",
                                         retryAction: { [weak self] in
                 guard let self = self else { return }
-                Task { await self.update(task: id, state: state) }
+                Task { await self.update(task: task.id, state: task.status) }
             })
-        case .deleteTask:
+        case let TaskAPIErrors.deleteTaskFailed(task):
             currentAlert = ErrorContext(title: "Error",
-                                        message: "Task delete was not successful")
-        case .none:
+                                        message: "Task id - \(task.id), delete was not successful")
+        case let TaskAPIErrors.createTaskFailed(task):
+            currentAlert = ErrorContext(title: "Error",
+                                        message: "Task id - \(task.id), create was not successful")
+        default:
             break
         }
     }

@@ -12,11 +12,7 @@ protocol TaskDetailsViewModelDelegate: AnyObject {
     func viewModelDidCompleteTaskUpdate(_ viewModel: TasksDetailsViewModel)
 }
 
-class TasksDetailsViewModel: BaseViewModel<TasksDetailsViewModel.NetworkRequest> {
-    enum NetworkRequest {
-        case submit
-    }
-    
+class TasksDetailsViewModel: BaseViewModel {
     enum Strategy {
         case update, create
     }
@@ -60,14 +56,14 @@ class TasksDetailsViewModel: BaseViewModel<TasksDetailsViewModel.NetworkRequest>
     
     @MainActor
     private func updateTask() {
-        networkRequest(.submit) {
+        networkRequest {
             let _ = try await self.api.update(self.task)
         }
     }
     
     @MainActor
     private func createTask() {
-        networkRequest(.submit) {
+        networkRequest {
             let _ = try await self.api.create(self.task)
             self.delegate?.viewModelDidCompleteTaskUpdate(self)
         }

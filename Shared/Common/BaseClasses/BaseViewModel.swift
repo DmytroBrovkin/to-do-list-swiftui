@@ -10,31 +10,27 @@ import Combine
 import SwiftUI
 
 protocol BaseViewModelProtocol {
-    var error: PassthroughSubject<NSError, Never> { get }
+    var error: PassthroughSubject<Error, Never> { get }
 }
 
-class BaseViewModel<T>: ObservableObject, BaseViewModelProtocol {
+class BaseViewModel: ObservableObject, BaseViewModelProtocol {
     @Published var currentAlert: ErrorContext?
-    
-    let error = PassthroughSubject<NSError, Never>()
-    var lastRequest: T?
+    let error = PassthroughSubject<Error, Never>()
 
     @MainActor
-    func networkRequest(_ id: T, _ request: @escaping () async throws -> Void) {
+    func networkRequest(_ request: @escaping () async throws -> Void) {
         Task {
             do {
                 try await request()
             }
-            catch {
-                lastRequest = id
-                self.error.send(error as NSError)
-                handle(error as NSError)
+            catch let networkError {
+                self.error.send(networkError)
+                handle(networkError)
             }
         }
     }
     
-    
-    func handle(_ error: NSError) {
+    func handle(_ error: Error) {
         // implement at the super class
         currentAlert = ErrorContext(title: "Error",
                                     message: "Something went wrong. Please try again later")

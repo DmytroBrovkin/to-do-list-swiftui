@@ -7,6 +7,10 @@
 import Foundation
 import Combine
 
+enum APIError: Error {
+    case networkError(_ statusCode: Int, _ userInfo: [String: String])
+}
+
 class APIHelper {
     private let session: URLSession
     private let baseUrl: URL
@@ -21,41 +25,61 @@ class APIHelper {
     // MARK: - Success block is Array
     func get<T>(path: String,
                 params: [String: String]?,
+                dtmEvent: DynatraceEvent? = nil,
+                error: Error? = nil,
                 headerParams: [String: String]? = nil) async throws -> T where T: Decodable {
         let urlRequest = self.createGetRequest(path: path, params: params, headerParams: headerParams)
-        return try await dataTask(with: urlRequest)
+        return try await dataTask(with: urlRequest, dtmEvent: dtmEvent, customError: error)
     }
     
-    func post<T, V>(path: String, params: V?) async throws -> T where T: Decodable, V: Sequence {
+    func post<T, V>(path: String,
+                    params: V?,
+                    dtmEvent: DynatraceEvent? = nil,
+                    error: Error? = nil) async throws -> T where T: Decodable, V: Sequence {
         let urlRequest = self.createPostRequest(path: path, params: params)
-        return try await dataTask(with: urlRequest)
+        return try await dataTask(with: urlRequest, dtmEvent: dtmEvent, customError: error)
     }
     
-    func put<T>(path: String, params: [String: String]?) async throws -> T where T: Decodable {
+    func put<T>(path: String,
+                params: [String: String]?,
+                dtmEvent: DynatraceEvent? = nil,
+                error: Error? = nil) async throws -> T where T: Decodable {
         var urlRequest = self.createGetRequest(path: path, params: params, headerParams: nil)
         urlRequest.httpMethod = "PUT"
-        return try await dataTask(with: urlRequest)
+        return try await dataTask(with: urlRequest, dtmEvent: dtmEvent, customError: error)
     }
 
-    func delete<T>(path: String, params: [String: String]?) async throws -> T where T: Decodable {
+    func delete<T>(path: String,
+                   params: [String: String]?,
+                   dtmEvent: DynatraceEvent? = nil,
+                   error: Error? = nil) async throws -> T where T: Decodable {
         var urlRequest = self.createGetRequest(path: path, params: params, headerParams: nil)
         urlRequest.httpMethod = "DELETE"
-        return try await dataTask(with: urlRequest)
+        return try await dataTask(with: urlRequest, dtmEvent: dtmEvent, customError: error)
     }
 
-    private func dataTask<T>(with urlRequest: URLRequest) async throws -> T where T: Decodable {
+    private func dataTask<T>(with urlRequest: URLRequest,
+                             dtmEvent: DynatraceEvent? = nil,
+                             customError: Error? = nil) async throws -> T where T: Decodable {
         print(urlRequest)
         
-        let (data, response) = try await session.data(for: urlRequest)
-        
-        guard let httpResponse = response as? HTTPURLResponse else { throw NSError.badServerResponse }
-        guard httpResponse.statusCode == 200 else {
-            let userInfo = data.dict ?? [:]
-            throw NSError(domain: "", code: httpResponse.statusCode, userInfo: userInfo)
+        do {
+            let (data, response) = try await session.data(for: urlRequest)
+            
+            guard let httpResponse = response as? HTTPURLResponse else { throw NSError.badServerResponse }
+            guard httpResponse.statusCode == 200 else {
+                let userInfo = data.dict ?? [:]
+                throw NSError(domain: "", code: httpResponse.statusCode, userInfo: userInfo)
+            }
+            
+            let decoder = JSONDecoder()
+            dtmEvent?.leaveWithSuccess()
+            
+            return try decoder.decode(T.self, from: data)
+        } catch let error {
+            dtmEvent?.leaveWithFailure()
+            throw customError ?? error
         }
-        
-        let decoder = JSONDecoder()
-        return try decoder.decode(T.self, from: data)
     }
     
     // MARK: - Helper funcs

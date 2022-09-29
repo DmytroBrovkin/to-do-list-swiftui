@@ -12,11 +12,7 @@ protocol LoginViewModelDelegate: AnyObject {
     func viewModelDidCompleteAuth(_ viewModel: LoginViewModel)
 }
 
-class LoginViewModel: BaseViewModel<LoginViewModel.NetworkRequest> {
-    enum NetworkRequest {
-        case signIn, register
-    }
-    
+class LoginViewModel: BaseViewModel {
     @Published var credentials: AuthCredentials = AuthCredentials(email: "dimitri@gmail.com", password: "testtest")
     
     private let api: AuthAPIProtocol
@@ -33,7 +29,7 @@ class LoginViewModel: BaseViewModel<LoginViewModel.NetworkRequest> {
     
     @MainActor
     func singIn() {
-        networkRequest(.signIn) {
+        networkRequest {
             let result = try await self.api.signIn(email: self.credentials.email, password: self.credentials.password)
             self.handle(result)
         }
@@ -41,7 +37,7 @@ class LoginViewModel: BaseViewModel<LoginViewModel.NetworkRequest> {
     
     @MainActor
     func register() {
-        networkRequest(.register) {
+        networkRequest {
             let _ = try await self.api.register(email: self.credentials.email, password: self.credentials.password)
             let result = try await self.api.signIn(email: self.credentials.email, password: self.credentials.password)
             self.handle(result)
@@ -55,23 +51,23 @@ class LoginViewModel: BaseViewModel<LoginViewModel.NetworkRequest> {
         self.delegate?.viewModelDidCompleteAuth(self)
     }
     
-    override func handle(_ error: NSError) {
-        switch self.lastRequest {
-        case .signIn:
+    override func handle(_ error: Error) {
+        switch error {
+        case AuthAPIErrors.loginFailed:
             currentAlert = ErrorContext(title: "Error",
                                         message: "Sign in was not successful",
                                         retryAction: { [weak self] in
                 guard let self = self else { return }
                 Task { await self.singIn() }
             })
-        case .register:
+        case AuthAPIErrors.registerFailed:
             currentAlert = ErrorContext(title: "Error",
                                         message: "Register was not successful",
                                         retryAction: { [weak self] in
                 guard let self = self else { return }
                 Task { await self.register() }
             })
-        case .none:
+        default:
             break
         }
     }
